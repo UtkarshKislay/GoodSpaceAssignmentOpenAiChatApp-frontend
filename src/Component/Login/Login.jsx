@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react'
 import axios from 'axios';
 import { useState, useRef } from 'react';
-
+import { useDispatch } from 'react-redux';
+import { saveUserInfo } from '../../Redux/action';
+import { useNavigate } from 'react-router-dom';
 const BASE_URL = 'http://localhost:5000/user';
 
 const Login = () => {
-
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
    const [userInfo, setUserInfo] = useState({
       email: '',
       userName: '',
@@ -14,14 +17,13 @@ const Login = () => {
    const [otpValue, setOtpValue] = useState();
    const [login, setLogin] = useState(false);
    const [otpSent, setOtpSent] = useState(0);
-   const timeoutRef = useRef(null);
    const [isRegistered, setIsRegistered] = useState(0);
 
-   const [errorMessage,setErrorMessage]=useState({
-        userNameAlreadyExist:'',
-        emailAlreadyExist:'',
-        passwordNotMatched:'',
-        userNameNotExist:''
+   const [errorMessage, setErrorMessage] = useState({
+      userNameAlreadyExist: '',
+      emailAlreadyExist: '',
+      passwordNotMatched: '',
+      userNameNotExist: ''
    });
 
    useEffect(() => {
@@ -47,13 +49,11 @@ const Login = () => {
 
          const message = res.data.message;
          if (message === 'Login Successfull') {
-            
-            const user=res.data.user;
-            // console.log(user);
-            
-
-
-
+            const user = res.data.user;
+            console.log(user);
+            console.log(user.userEmail, " ", user.userName);
+            dispatch(saveUserInfo(user));
+            navigate('/home');
          } else if (message === 'Password not matched') {
 
          } else if (message === "UserName not exist") {
@@ -74,14 +74,14 @@ const Login = () => {
             method: 'post',
             data: userInfo,
          });
-         const message=res.data;
+         const message = res.data;
          if (message === 'New user save Successfully') {
             setIsRegistered(1);
-         }else if(message==="Email Already Exist"){
+         } else if (message === "Email Already Exist") {
 
-         }else if(message=="Username Already Exist"){
+         } else if (message == "Username Already Exist") {
 
-         }else{
+         } else {
             //server error
          }
       } catch (err) {
