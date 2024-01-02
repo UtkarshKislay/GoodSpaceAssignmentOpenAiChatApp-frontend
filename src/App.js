@@ -3,8 +3,22 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from './Component/Login/Login';
 import Home from './Component/Home/Home';
-
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 function App() {
+  // const navigate = useNavigate();
+  const data=useSelector((state)=>state.userInfo.data);
+  // useEffect(()=>{
+  //   const ifNotLogin=()=>{
+  //     console.log(data.userName);
+  //        if(!data.userName){
+  //             //  navigate('/');
+  //        }
+  //   }
+  //   ifNotLogin();
+  // },[]);
+
   return (
     <div className="App">
       <Router>
@@ -17,10 +31,6 @@ function App() {
             path="/home"
             element={<Home />}
           ></Route>
-          <Route
-            path="/redirect"
-            element={<Navigate to="/home" />}
-          />
         </Routes>
       </Router>
     </div>
