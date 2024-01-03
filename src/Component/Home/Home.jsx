@@ -14,7 +14,28 @@ const Home = () => {
   useEffect(() => {
     if (data.userName === undefined) {
       navigate("/");
+    }else{
+      const initializeMessageBox=async()=>{
+        try{
+          const res=await axios(`${BASE_URL}/openai/initializeChatResponse`,{
+            method:'post',
+            maxBodyLength: Infinity,
+            headers: { 
+             'Content-Type': 'application/json'
+           },
+            data:{
+             email:data.userEmail
+            }
+          });
+          console.log(res);
+  
+        }catch(err){
+          console.log(err);
+        }
+      }
+      initializeMessageBox();
     }
+
   }, []);
 
   const handleQuery=async()=>{
