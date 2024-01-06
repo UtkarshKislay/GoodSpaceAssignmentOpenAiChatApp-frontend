@@ -4,16 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import ChatBox from '../ChatBoxComponent/ChatBox';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import SpeechRecognization from '../SpeechRecog/SpeechRecognization';
 const BASE_URL = 'http://localhost:5000'
 
 const Home = () => {
 
   const navigate = useNavigate();
   const data = useSelector((state) => state.userInfo.data);
-  const [query, setQuery] = useState();
+  const transcript = useSelector((state) => state.userTranscript.data);
+  const [query, setQuery] = useState("");
   const [queryResponse, setQueryResponse] = useState();
   const [prevChat, setPrevChat] = useState([]);
-  const [laoding,setLoading]=useState(0);
+  const [laoding, setLoading] = useState(0);
+
+  console.log("TRAnspci: ", transcript);
+
 
 
   useEffect(() => {
@@ -41,6 +46,10 @@ const Home = () => {
       initializeMessageBox();
     }
   }, []);
+
+  // useEffect(() => {
+  //   setQuery((state) => transcript);
+  // }, [transcript])
 
   const handleQuery = async () => {
     try {
@@ -95,12 +104,14 @@ const Home = () => {
 
         <div className='prevChat'>
           ChatBox
-          <ChatBox data={prevChat} load={laoding}/>
+          <ChatBox data={prevChat} load={laoding} />
         </div>
 
         <div className='Enter Query'>
-          <input type="text" placeholder='Enter ' name='query' value={query} onChange={(e) => setQuery(e.target.value)} />
-          <button onClick={handleQuery}>Send</button>
+          {transcript}
+          <input type="text" placeholder='Enter ' name='query' value={query} onChange={(e)=>setQuery(e.target.value)} />
+          <button disabled={!query} onClick={handleQuery}>Send</button>
+          <SpeechRecognization />
         </div>
       </div>
 
